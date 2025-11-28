@@ -1,11 +1,17 @@
 #include <cassert>
 
+/*
+Because std::set already provides a binary search tree,
+this implementation will also support indecies to make it more versatile.
+*/
 template <class type>
 struct binary_search_tree {
     struct node {
         node* parent = NULL;
         node* left = NULL;
         node* right = NULL;
+        int size = 1;
+        int flags = 0; // unused for now
         type val;
         node(node* parent, const type& val): parent(parent), val(val) {}
         ~node() {
@@ -20,6 +26,15 @@ struct binary_search_tree {
         delete root;
     }
 
+    private:
+    void update_ancestors(node* nd) {
+        while (nd) {
+            nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
+            nd = nd->parent;
+        }
+    }
+
+    public:
     node* find(const type& val) {
         node* curr = root;
         while (curr) {
@@ -35,30 +50,43 @@ struct binary_search_tree {
         while (curr) {
             if (val < curr->val) {
                 if (curr->left) {curr = curr->left;}
-                else {return curr->left = new node(curr, val);}
+                else {
+                    curr->left = new node(curr, val);
+                    update_ancestors(curr);
+                    return curr->left;
+                }
             } else if (val > curr->val) {
                 if (curr->right) {curr = curr->right;}
-                else {return curr->right = new node(curr, val);}
+                else {
+                    curr->right = new node(curr, val);
+                    update_ancestors(curr);
+                    return curr->right;
+                }
             } else if (val == curr->val) {
                 return curr;
             }
         }
+        assert(false);
         return NULL;
     }
     void erase(node* nd) {
-        assert(nd); assert(root);
+        assert(nd);
+        assert(root); // tree is non-empty
         node* par = nd->parent;
         node*& _root = (!par? root : (nd == par->left? par->left : par->right));
         node* left = nd->left;
         node* right = nd->right;
         if (!right) {
             _root = left; if (left) {left->parent = par;}
+            update_ancestors(par);
         } else if (!left) {
             _root = right; if (right) {right->parent = par;}
+            update_ancestors(par);
         } else {
             if (!left->right) {
                 _root = left; left->parent = par;
                 left->right = right; right->parent = left;
+                update_ancestors(left);
             } else {
                 node* mid = left->right;
                 while (mid->right) {mid = mid->right;}
@@ -68,6 +96,7 @@ struct binary_search_tree {
                 mid->left = left; left->parent = mid;
                 mid->right = right; right->parent = mid;
                 mid_par->right = mid_left; if (mid_left) {mid_left->parent = mid_par;}
+                update_ancestors(mid_par);
             }
         }
         nd->left = nd->right = NULL;
