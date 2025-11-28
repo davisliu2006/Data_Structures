@@ -71,7 +71,7 @@ struct binary_search_tree {
     }
     void erase(node* nd) {
         assert(nd);
-        assert(root); // tree is non-empty
+        assert(root && "Cannot erase from an empty tree");
         node* par = nd->parent;
         node*& _root = (!par? root : (nd == par->left? par->left : par->right));
         node* left = nd->left;
@@ -101,5 +101,23 @@ struct binary_search_tree {
         }
         nd->left = nd->right = NULL;
         delete nd;
+    }
+    node* index(int x) {
+        assert(0 <= x && x < root->size);
+        node* nd = root;
+        while (nd) {
+            if (nd->left) {
+                if (x < nd->left->size) {nd = nd->left;}
+                else if (x == nd->left->size) {return nd;}
+                else {x -= nd->left->size+1; nd = nd->right;}
+            } else if (x == 0) {
+                return nd;
+            } else {
+                x -= 1;
+                nd = nd->right;
+            }
+        }
+        assert(false);
+        return NULL;
     }
 };
