@@ -23,21 +23,21 @@ namespace ds {
         trie() {root = new node(NULL, 0, false);}
         ~trie() {delete root;}
     
-        node* find(int8_t* begin, int size, node* _root = NULL) {
-            int8_t* end = begin+size;
+        node* find(const int8_t* begin, int size, node* _root = NULL) {
+            const int8_t* end = begin+size;
             node* curr = (_root? _root : root);
             while (begin < end) {
-                int8_t radix = *begin;
+                uint8_t radix = *begin;
                 if (!(curr = curr->children[radix])) {return NULL;}
                 begin++;
             }
             return curr;
         }
-        node* insert(int8_t* begin, int size, node* _root = NULL) {
-            int8_t* end = begin+size;
+        node* insert(const int8_t* begin, int size, node* _root = NULL) {
+            const int8_t* end = begin+size;
             node* curr = (_root? _root : root);
             while (begin < end) {
-                int8_t radix = *begin;
+                uint8_t radix = *begin;
                 node*& trg = curr->children[radix];
                 if (!trg) {trg = new node(curr, radix, false);}
                 curr = trg;
