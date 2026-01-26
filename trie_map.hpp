@@ -1,3 +1,5 @@
+#pragma once
+
 #include "trie.hpp"
 #include <string>
 
