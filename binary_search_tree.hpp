@@ -122,4 +122,52 @@ struct binary_search_tree {
         assert(false);
         return NULL;
     }
+
+    private:
+    void rotate_right(node* nd) {
+        assert(nd);
+        assert(nd->left && "Cannot rotate right if left side is empty");
+
+        node* left = nd->left;
+        node* left_right = left->right;
+        node* par = nd->parent;
+        
+        nd->left = left_right; if (left_right) {left_right->parent = nd;}
+        left->right = nd; nd->parent = left;
+        
+        left->parent = par;
+        if (!par) {
+            root = left;
+        } else if (nd == par->left) {
+            par->left = left;
+        } else {
+            par->right = left;
+        }
+
+        nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
+        left->size = 1 + (left->left? left->left->size : 0) + (left->right? left->right->size : 0);
+    }
+    void rotate_left(node* nd) {
+        assert(nd);
+        assert(nd->right && "Cannot rotate left if right side is empty");
+
+        node* right = nd->right;
+        node* right_left = right->left;
+        node* par = nd->parent;
+
+        nd->right = right_left; if (right_left) {right_left->parent = nd;}
+        right->left = nd; nd->parent = right;
+        
+        right->parent = par;
+        if (!par) {
+            root = right;
+        } else if (nd == par->left) {
+            par->left = right;
+        } else {
+            par->right = right;
+        }
+
+        nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
+        right->size = 1 + (right->left? right->left->size : 0) + (right->right? right->right->size : 0);
+    }
 };
