@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 namespace ds {
     struct trie {
@@ -54,5 +55,7 @@ namespace ds {
         void erase(node* nd) {
             nd->leaf = false;
         }
+        node* find(const std::string& str) {return find(str.c_str(), str.size());}
+        node* insert(const std::string& str) {return insert(str.c_str(), str.size());}
     };
 }
