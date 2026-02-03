@@ -10,9 +10,9 @@ namespace ds {
         struct node {
             std::array<node*,RANGE> children = {};
             node* parent;
-            int8_t radix;
+            uint8_t radix;
             bool leaf;
-            node(node* parent, int8_t radix, bool leaf): parent(parent), radix(radix), leaf(leaf) {}
+            node(node* parent, uint8_t radix, bool leaf): parent(parent), radix(radix), leaf(leaf) {}
             ~node() {
                 for (node* nd: children) {delete nd;}
             }
@@ -23,8 +23,8 @@ namespace ds {
         trie() {root = new node(NULL, 0, false);}
         ~trie() {delete root;}
     
-        node* find(const int8_t* begin, int size, node* _root = NULL) {
-            const int8_t* end = begin+size;
+        node* find(const char* begin, int size, node* _root = NULL) {
+            const char* end = begin+size;
             node* curr = (_root? _root : root);
             while (begin < end) {
                 uint8_t radix = *begin;
@@ -33,8 +33,8 @@ namespace ds {
             }
             return curr;
         }
-        node* insert(const int8_t* begin, int size, node* _root = NULL) {
-            const int8_t* end = begin+size;
+        node* insert(const char* begin, int size, node* _root = NULL) {
+            const char* end = begin+size;
             node* curr = (_root? _root : root);
             while (begin < end) {
                 uint8_t radix = *begin;
