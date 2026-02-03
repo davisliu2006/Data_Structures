@@ -4,6 +4,7 @@
 
 #include "test.hpp"
 #include "rng.hpp"
+#include "../binary_search_tree.hpp"
 #include "../fenwick.hpp"
 #include "../segtree.hpp"
 #include "../trie.hpp"
@@ -79,6 +80,30 @@ vector<Test> tests = {
         tr.prune(nd1);
         assert(!tr.find("abcde") && !tr.find("abcd"));
         assert(tr.find("abc") && tr.find("abd"));
+    }},
+    {"bst_test", []() {
+        ds::binary_search_tree<int> bst;
+        decltype(bst)::node* nd;
+        assert(!bst.find(0));
+        bst.insert(0);
+        bst.insert(-2);
+        bst.insert(2);
+        bst.insert(-1);
+        bst.insert(1);
+        bst.insert(-3);
+        assert((nd = bst.find(-2)) && nd->size == 3);
+        assert((nd = bst.find(2)) && nd->size == 2);
+        assert((nd = bst.find(-1)) && nd->size == 1);
+        assert((nd = bst.find(1)) && nd->size == 1);
+        assert((nd = bst.find(-3)) && nd->size == 1);
+        assert((nd = bst.find(0)) && nd->size == 6);
+        bst.erase(nd);
+        assert(!bst.find(0));
+        assert((nd = bst.find(-2)) && nd->size == 2);
+        assert((nd = bst.find(2)) && nd->size == 2);
+        assert((nd = bst.find(-1)) && nd->size == 5);
+        assert((nd = bst.find(1)) && nd->size == 1);
+        assert((nd = bst.find(-3)) && nd->size == 1);
     }}
 };
 
