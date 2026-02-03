@@ -86,6 +86,7 @@ namespace ds {
             }
         }
         type query(int l, int r) {
+            assert(l <= r);
             return _query(l, r, 0, 0, _size-1);
         }
     };
