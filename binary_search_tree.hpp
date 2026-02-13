@@ -7,19 +7,43 @@ namespace ds {
     Because std::set already provides a binary search tree,
     this implementation will also support indecies to make it more versatile.
     */
-    template <class type>
+    template <class type, class flags_t = int>
     struct binary_search_tree {
         struct node {
             node* parent = NULL;
             node* left = NULL;
             node* right = NULL;
             int size = 1;
-            int flags = 0; // unused for now
+            flags_t flags = 0;
             type val;
+
             node(node* parent, const type& val): parent(parent), val(val) {}
             ~node() {
                 delete left;
                 delete right;
+            }
+
+            node* prev() {
+                node* val = this;
+                if (val->left) {
+                    val = val->left;
+                    while (val->right) {val = val->right;}
+                } else {
+                    val = val->parent;
+                    while (val->left == this) {val = val->parent;}
+                }
+                return val;
+            }
+            node* next() {
+                node* val = this;
+                if (val->right) {
+                    val = val->right;
+                    while (val->left) {val = val->left;}
+                } else {
+                    val = val->parent;
+                    while (val->right == this) {val = val->parent;}
+                }
+                return val;
             }
         };
 
@@ -29,7 +53,18 @@ namespace ds {
             delete root;
         }
 
-        private:
+        node* first_node() const {
+            node* val = root;
+            while (val->left) {val = val->left;}
+            return val;
+        }
+        node* last_node() const {
+            node* val = root;
+            while (val->right) {val = val->right;}
+            return val;
+        }
+
+        protected:
         void update_ancestors(node* nd) {
             while (nd) {
                 nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
@@ -38,7 +73,7 @@ namespace ds {
         }
 
         public:
-        node* find(const type& val) {
+        node* find(const type& val) const {
             node* curr = root;
             while (curr) {
                 if (val < curr->val) {curr = curr->left;}
@@ -105,7 +140,7 @@ namespace ds {
             nd->left = nd->right = NULL;
             delete nd;
         }
-        node* index(int x) {
+        node* index(int x) const {
             assert(0 <= x && x < root->size);
             node* nd = root;
             while (nd) {
@@ -124,7 +159,7 @@ namespace ds {
             return NULL;
         }
 
-        private:
+        protected:
         void rotate_right(node* nd) {
             assert(nd);
             assert(nd->left && "Cannot rotate right if left side is empty");
@@ -171,5 +206,7 @@ namespace ds {
             nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
             right->size = 1 + (right->left? right->left->size : 0) + (right->right? right->right->size : 0);
         }
+
+        binary_search_tree<type>& operator =(const binary_search_tree<type> bst) = delete;
     };
 }

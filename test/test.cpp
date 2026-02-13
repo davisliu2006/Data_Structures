@@ -91,19 +91,38 @@ vector<Test> tests = {
         bst.insert(-1);
         bst.insert(1);
         bst.insert(-3);
-        assert((nd = bst.find(-2)) && nd->size == 3);
-        assert((nd = bst.find(2)) && nd->size == 2);
-        assert((nd = bst.find(-1)) && nd->size == 1);
-        assert((nd = bst.find(1)) && nd->size == 1);
-        assert((nd = bst.find(-3)) && nd->size == 1);
-        assert((nd = bst.find(0)) && nd->size == 6);
+        assert((nd = bst.find(-2)) && nd->size == 3 && nd == bst.index(1));
+        assert((nd = bst.find(2)) && nd->size == 2 && nd == bst.index(5));
+        assert((nd = bst.find(-1)) && nd->size == 1 && nd == bst.index(2));
+        assert((nd = bst.find(1)) && nd->size == 1 && nd == bst.index(4));
+        assert((nd = bst.find(-3)) && nd->size == 1 && nd == bst.index(0));
+        assert((nd = bst.find(0)) && nd->size == 6 && nd == bst.index(3));
         bst.erase(nd);
         assert(!bst.find(0));
-        assert((nd = bst.find(-2)) && nd->size == 2);
-        assert((nd = bst.find(2)) && nd->size == 2);
-        assert((nd = bst.find(-1)) && nd->size == 5);
-        assert((nd = bst.find(1)) && nd->size == 1);
-        assert((nd = bst.find(-3)) && nd->size == 1);
+        assert((nd = bst.find(-2)) && nd->size == 2 && nd == bst.index(1));
+        assert((nd = bst.find(2)) && nd->size == 2 && nd == bst.index(4));
+        assert((nd = bst.find(1)) && nd->size == 1 && nd == bst.index(3));
+        assert((nd = bst.find(-3)) && nd->size == 1 && nd == bst.index(0));
+        assert((nd = bst.find(-1)) && nd->size == 5 && nd == bst.index(2));
+        bst.insert(-1);
+        assert(nd->size == 5);
+    }},
+    {"bst_iterator_test", []() {
+        ds::binary_search_tree<int> bst;
+        decltype(bst)::node* nd;
+        bst.insert(0);
+        bst.insert(-2);
+        bst.insert(2);
+        bst.insert(-1);
+        bst.insert(1);
+        bst.insert(-3);
+        nd = bst.first_node();
+        assert(nd->val == -3);
+        assert((nd = nd->next())->val == -2);
+        assert((nd = nd->next())->val == -1);
+        assert((nd = nd->next())->val == 0);
+        assert((nd = nd->next())->val == 1);
+        assert((nd = nd->next())->val == 2 && nd == bst.last_node());
     }}
 };
 
