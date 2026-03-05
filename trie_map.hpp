@@ -1,6 +1,6 @@
 #pragma once
 
-#include "trie.hpp"
+#include "trie_base.hpp"
 
 namespace ds {
     template <class type>

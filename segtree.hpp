@@ -48,8 +48,8 @@ namespace ds {
                 return tree[node];
             } else {
                 int mid = (nl+nr)/2;
-                int lr = min(r, mid);
-                int rl = max(l, mid+1);
+                int lr = std::min(r, mid);
+                int rl = std::max(l, mid+1);
                 if (l <= lr && rl <= r) {
                     return func(
                         _query(l, lr, lnode(node), nl, mid),

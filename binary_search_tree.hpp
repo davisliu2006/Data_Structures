@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
 
 namespace ds {
     /*
@@ -14,7 +15,7 @@ namespace ds {
             node* left = NULL;
             node* right = NULL;
             int size = 1;
-            flags_t flags = 0;
+            flags_t flags = flags_t();
             type val;
 
             node(node* parent, const type& val): parent(parent), val(val) {}
