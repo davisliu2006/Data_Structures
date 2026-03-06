@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -5,6 +6,7 @@
 #include "test.hpp"
 #include "rng.hpp"
 #include "../binary_search_tree.hpp"
+#include "../deque.hpp"
 #include "../fenwick.hpp"
 #include "../segtree.hpp"
 #include "../trie.hpp"
@@ -123,6 +125,20 @@ vector<Test> tests = {
         assert((nd = nd->next())->val == 0);
         assert((nd = nd->next())->val == 1);
         assert((nd = nd->next())->val == 2 && nd == bst.last_node());
+    }},
+    {"deque_test", []() {
+        ds::circular_deque<int> d(2);
+        d.push_back(1); d.push_back(2);
+        assert(d.front() == 1 && d.back() == 2 && d.size() == 2 && d.capacity() == 2);
+        d.push_front(-1); d.push_front(-2);
+        assert(d.front() == -2 && d.back() == 2 && d.size() == 4 && d.capacity() == 4);
+        d.push_front(0); d.push_back(0);
+        assert(d.front() == 0 && d.back() == 0 && d.size() == 6 && d.capacity() == 8);
+        d.pop_back(); d.pop_front();
+        assert(d.front() == -2 && d.back() == 2 && d.size() == 4 && d.capacity() == 8);
+        d.push_front(-3); d.push_back(3);
+        assert(d.front() == -3 && d.back() == 3 && d.size() == 6 && d.capacity() == 8);
+        assert(d[0] == -3 && d[1] == -2 && d[2] == -1 && d[3] == 1 && d[4] == 2 && d[5] == 3);
     }}
 };
 
