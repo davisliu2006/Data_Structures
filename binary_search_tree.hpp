@@ -227,15 +227,16 @@ namespace ds {
             if (!src) {return;}
             dst = new node(dst_par, src->val);
             copy_subtree(dst, dst->left, src->left);
-            copy_subtree(dst, dst->left, src->right);
+            copy_subtree(dst, dst->right, src->right);
         }
         public:
         binary_search_tree(const binary_search_tree& bst) {
-            root = copy_subtree(NULL, root, bst.root);
+            copy_subtree(NULL, root, bst.root);
         };
         binary_search_tree& operator =(const binary_search_tree& bst) {
             delete root;
-            root = copy_subtree(NULL, root, bst.root);
+            copy_subtree(NULL, root, bst.root);
+            return *this;
         };
         binary_search_tree(binary_search_tree&& bst) noexcept {
             root = bst.root;
@@ -245,6 +246,7 @@ namespace ds {
             delete root;
             root = bst.root;
             bst.root = NULL;
+            return *this;
         };
     };
 }

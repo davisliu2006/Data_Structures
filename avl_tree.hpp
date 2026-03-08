@@ -19,6 +19,9 @@ namespace ds {
         using base_tree = binary_search_tree<type, avl_tree_flags>;
         using node = typename base_tree::node;
 
+        avl_tree(): base_tree() {}
+        ~avl_tree() {}
+
         protected:
         void rotate_right(node* nd) {
             auto [root, right_left] = base_tree::rotate_right(nd);
@@ -73,5 +76,24 @@ namespace ds {
                 curr = curr->parent;
             }
         }
+
+        avl_tree(const avl_tree& bst) {
+            copy_subtree(NULL, base_tree::root, bst.root);
+        };
+        avl_tree& operator =(const avl_tree& bst) {
+            delete base_tree::root;
+            copy_subtree(NULL, base_tree::root, bst.root);
+            return *this;
+        };
+        avl_tree(avl_tree&& bst) noexcept {
+            base_tree::root = bst.root;
+            bst.root = NULL;
+        };
+        avl_tree& operator =(avl_tree&& bst) noexcept {
+            delete base_tree::root;
+            base_tree::root = bst.root;
+            bst.root = NULL;
+            return *this;
+        };
     };
 }

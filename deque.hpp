@@ -9,7 +9,7 @@ namespace ds {
     Contiguous version of deque.
     */
     template <class type>
-    struct circular_deque {
+    struct contig_deque {
         private:
         type* arr;
         int _front = 0;
@@ -25,10 +25,10 @@ namespace ds {
         }
 
         public:
-        circular_deque(int capacity = 16): _capacity(capacity) {
+        contig_deque(int capacity = 16): _capacity(capacity) {
             arr = (type*)::operator new(_raw_capacity());
         }
-        ~circular_deque() {
+        ~contig_deque() {
             destroy_elements();
             ::operator delete(arr);
         }
@@ -81,14 +81,14 @@ namespace ds {
             _size--;
         }
 
-        circular_deque(const circular_deque& dq):
+        contig_deque(const contig_deque& dq):
         _front(0), _size(dq._size), _capacity(dq._capacity) {
             arr = (type*)::operator new(_raw_capacity());
             for (int i = 0; i < _size; i++) {
                 new (&arr[i%_capacity]) type(dq[i]);
             }
         }
-        circular_deque& operator =(const circular_deque& dq) {
+        contig_deque& operator =(const contig_deque& dq) {
             if (this == &dq) {return *this;}
             destroy_elements();
             ::operator delete(arr);
@@ -99,12 +99,12 @@ namespace ds {
             }
             return *this;
         }
-        circular_deque(circular_deque&& dq) noexcept:
+        contig_deque(contig_deque&& dq) noexcept:
         _capacity(dq._capacity), _size(dq._size), arr(dq.arr) {
             dq._size = 0; dq._capacity = 0; dq._front = 0;
             dq.arr = NULL;
         }
-        circular_deque& operator=(circular_deque&& dq) noexcept {
+        contig_deque& operator=(contig_deque&& dq) noexcept {
             if (this == &dq) {return *this;}
             destroy_elements();
             ::operator delete(arr);
@@ -114,7 +114,7 @@ namespace ds {
             dq.arr = NULL;
             return *this;
         }
-        bool operator ==(const circular_deque& dq) const {
+        bool operator ==(const contig_deque& dq) const {
             if (this->size() != dq.size()) {return false;}
             for (int i = 0 ; i < _size; i++) {
                 if ((*this)[i] != dq[i]) {return false;}
