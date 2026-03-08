@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cassert>
 #include <cstddef>
 
@@ -47,6 +48,9 @@ namespace ds {
                 return val;
             }
         };
+
+        template <int n>
+        using context_t = std::array<node*,n>;
 
         node* root = NULL;
         binary_search_tree() {}
@@ -108,24 +112,28 @@ namespace ds {
             assert(false);
             return NULL;
         }
-        void erase(node* nd) {
+        context_t<1> erase(node* nd) {
             assert(nd);
             assert(root && "Cannot erase from an empty tree");
             node* par = nd->parent;
             node*& _root = (!par? root : (nd == par->left? par->left : par->right));
             node* left = nd->left;
             node* right = nd->right;
+            context_t<1> val;
             if (!right) {
                 _root = left; if (left) {left->parent = par;}
                 update_ancestors(par);
+                val = {par};
             } else if (!left) {
                 _root = right; if (right) {right->parent = par;}
                 update_ancestors(par);
+                val = {par};
             } else {
                 if (!left->right) {
                     _root = left; left->parent = par;
                     left->right = right; right->parent = left;
                     update_ancestors(left);
+                    val = {left};
                 } else {
                     node* mid = left->right;
                     while (mid->right) {mid = mid->right;}
@@ -136,10 +144,12 @@ namespace ds {
                     mid->right = right; right->parent = mid;
                     mid_par->right = mid_left; if (mid_left) {mid_left->parent = mid_par;}
                     update_ancestors(mid_par);
+                    val = {mid_par};
                 }
             }
             nd->left = nd->right = NULL;
             delete nd;
+            return val;
         }
         node* index(int x) const {
             assert(0 <= x && x < root->size);
@@ -161,7 +171,7 @@ namespace ds {
         }
 
         protected:
-        void rotate_right(node* nd) {
+        context_t<2> rotate_right(node* nd) {
             assert(nd);
             assert(nd->left && "Cannot rotate right if left side is empty");
 
@@ -183,8 +193,10 @@ namespace ds {
 
             nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
             left->size = 1 + (left->left? left->left->size : 0) + (left->right? left->right->size : 0);
+
+            return {left, left_right};
         }
-        void rotate_left(node* nd) {
+        context_t<2> rotate_left(node* nd) {
             assert(nd);
             assert(nd->right && "Cannot rotate left if right side is empty");
 
@@ -206,8 +218,33 @@ namespace ds {
 
             nd->size = 1 + (nd->left? nd->left->size : 0) + (nd->right? nd->right->size : 0);
             right->size = 1 + (right->left? right->left->size : 0) + (right->right? right->right->size : 0);
+
+            return {right, right_left};
         }
 
-        binary_search_tree<type>& operator =(const binary_search_tree<type> bst) = delete;
+        protected:
+        static void copy_subtree(node* dst_par, node*& dst, node* src) {
+            if (!src) {return;}
+            dst = new node(dst_par, src->val);
+            copy_subtree(dst, dst->left, src->left);
+            copy_subtree(dst, dst->left, src->right);
+        }
+        public:
+        binary_search_tree(const binary_search_tree& bst) {
+            root = copy_subtree(NULL, root, bst.root);
+        };
+        binary_search_tree& operator =(const binary_search_tree& bst) {
+            delete root;
+            root = copy_subtree(NULL, root, bst.root);
+        };
+        binary_search_tree(binary_search_tree&& bst) noexcept {
+            root = bst.root;
+            bst.root = NULL;
+        };
+        binary_search_tree& operator =(binary_search_tree&& bst) noexcept {
+            delete root;
+            root = bst.root;
+            bst.root = NULL;
+        };
     };
 }

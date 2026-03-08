@@ -5,6 +5,7 @@
 
 #include "test.hpp"
 #include "rng.hpp"
+#include "../avl_tree.hpp"
 #include "../binary_search_tree.hpp"
 #include "../deque.hpp"
 #include "../fenwick.hpp"
@@ -125,6 +126,25 @@ vector<Test> tests = {
         assert((nd = nd->next())->val == 0);
         assert((nd = nd->next())->val == 1);
         assert((nd = nd->next())->val == 2 && nd == bst.last_node());
+    }},
+    {"avl_tree_test", []() {
+        ds::avl_tree<int> bst;
+        decltype(bst)::node* nd;
+        nd = bst.insert(0);
+        bst.insert(1);
+        bst.insert(2);
+        bst.insert(-2);
+        bst.insert(-1);
+        assert((nd = bst.find(1)) && nd->size == 5);
+        assert((nd = bst.find(-1)) && nd->size == 3);
+        assert((nd = bst.find(-2)) && nd->size == 1);
+        assert((nd = bst.find(0)) && nd->size == 1);
+        assert((nd = bst.find(2)) && nd->size == 1);
+        bst.erase(nd);
+        assert((nd = bst.find(-1)) && nd->size == 4);
+        assert((nd = bst.find(-2)) && nd->size == 1);
+        assert((nd = bst.find(1)) && nd->size == 2);
+        assert((nd = bst.find(0)) && nd->size == 1);
     }},
     {"deque_test", []() {
         ds::circular_deque<int> d(2);
