@@ -159,6 +159,8 @@ vector<Test> tests = {
         d.push_front(-3); d.push_back(3);
         assert(d.front() == -3 && d.back() == 3 && d.size() == 6 && d.capacity() == 8);
         assert(d[0] == -3 && d[1] == -2 && d[2] == -1 && d[3] == 1 && d[4] == 2 && d[5] == 3);
+        ds::circular_deque<int> d2 = d;
+        assert(d == d2);
     }}
 };
 
