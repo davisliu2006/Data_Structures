@@ -14,6 +14,18 @@
 
 using namespace std;
 
+struct trie_config_alphanum {
+    static constexpr int range = 26;
+    static uint8_t mapper(uint8_t x) {
+        if ('a' <= x && x <= 'z') {
+            return x - 'a';
+        } else {
+            assert(false);
+            return 0;
+        }
+    }
+};
+
 vector<Test> tests = {
     {"fenwick_test", []() {
         int n = 100;
@@ -69,6 +81,25 @@ vector<Test> tests = {
         ds::trie tr;
         ds::trie::node* nd1;
         ds::trie::node* nd2;
+        assert(!tr.find("abcd"));
+        tr.insert("abd");
+        nd1 = tr.insert("abcd");
+        tr.insert("abcde");
+        assert((nd2 = tr.find("abcd")) && nd2->leaf && nd2 == nd1);
+        assert((nd1 = tr.find("abc")) && !nd1->leaf);
+        assert(!tr.find("abcdf"));
+        assert(tr.find("d", 1, nd1) == nd2);
+        tr.erase(nd2);
+        assert((nd1 = tr.find("abcd")) && !nd1->leaf);
+        assert((nd2 = tr.find("abcde")) && nd2->leaf);
+        tr.prune(nd1);
+        assert(!tr.find("abcde") && !tr.find("abcd"));
+        assert(tr.find("abc") && tr.find("abd"));
+    }},
+    {"sp_trie_test", []() {
+        ds::sp_trie<trie_config_alphanum> tr;
+        ds::sp_trie<trie_config_alphanum>::node* nd1;
+        ds::sp_trie<trie_config_alphanum>::node* nd2;
         assert(!tr.find("abcd"));
         tr.insert("abd");
         nd1 = tr.insert("abcd");

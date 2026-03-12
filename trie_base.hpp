@@ -4,10 +4,19 @@
 #include <string>
 
 namespace ds {
-    template <class type>
+    struct trie_config_default {
+        static constexpr int range = 256;
+        static uint8_t mapper(uint8_t x) {
+            return x;
+        }
+    };
+
+    template <class type, class trie_config = trie_config_default>
     struct trie_base {
-        static constexpr int BITS = 8;
-        static constexpr int RANGE = 1<<BITS;
+        static constexpr int RANGE = trie_config::range;
+        static uint8_t mapper(uint8_t x) {
+            return trie_config::mapper(x);
+        }
 
         struct node {
             std::array<node*,RANGE> children = {};
@@ -32,7 +41,7 @@ namespace ds {
             const char* end = begin+size;
             node* curr = (_root? _root : root);
             while (begin < end) {
-                uint8_t radix = *begin;
+                uint8_t radix = mapper(*begin);
                 if (!(curr = curr->children[radix])) {return NULL;}
                 begin++;
             }
@@ -42,7 +51,7 @@ namespace ds {
             const char* end = begin+size;
             node* curr = (_root? _root : root);
             while (begin < end) {
-                uint8_t radix = *begin;
+                uint8_t radix = mapper(*begin);
                 node*& trg = curr->children[radix];
                 if (!trg) {trg = new node(curr, radix, false);}
                 curr = trg;
