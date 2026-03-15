@@ -5,10 +5,12 @@
 #include <cstddef>
 
 namespace ds {
-    /*
-    Because std::set already provides a binary search tree,
-    this implementation will also support indecies to make it more versatile.
-    */
+    /**
+     * Because std::set already provides a binary search tree, this
+     * implementation will also support size tracking to make it more
+     * versatile and allow indexing.
+     * This class can be extended to use different balancing algorithms.
+     */
     template <class type, class flags_t = int>
     struct binary_search_tree {
         struct node {
@@ -58,6 +60,7 @@ namespace ds {
             delete root;
         }
 
+        int size() const {return root->size;}
         node* first_node() const {
             node* val = root;
             while (val->left) {val = val->left;}

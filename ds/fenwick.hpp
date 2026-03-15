@@ -3,6 +3,9 @@
 #include <type_traits>
 
 namespace ds {
+    /**
+     * Standard fenwick tree data structure.
+     */
     template <class type>
     struct fenwick {
         static_assert(std::is_arithmetic<type>());
@@ -19,14 +22,14 @@ namespace ds {
             delete[] arr;
         }
 
-        int size() {return size;}
+        int size() const {return size;}
         void update(int i, type dval) {
             while (i <= _size) {
                 arr[i] += dval;
                 i += (i&-i);
             }
         }
-        type query(int i) {
+        type query(int i) const {
             type val = 0;
             while (i > 0) {
                 val += arr[i];

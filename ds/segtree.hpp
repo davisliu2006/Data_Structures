@@ -5,6 +5,9 @@
 #include <vector>
 
 namespace ds {
+    /**
+     * Standard segment tree data structure.
+     */
     template <class type>
     struct segtree {
         using ftype = std::function<type(const type&, const type&)>;
@@ -43,7 +46,7 @@ namespace ds {
                 tree[node] = func(tree[lnode(node)], tree[rnode(node)]);
             }
         }
-        type _query(int l, int r, int node, int nl, int nr) {
+        type _query(int l, int r, int node, int nl, int nr) const {
             if (nl == l and nr == r) {
                 return tree[node];
             } else {
@@ -65,7 +68,7 @@ namespace ds {
         }
 
         public:
-        int size() {return size;}
+        int size() const {return size;}
         void build(const std::vector<type>& arr) {
             _build(arr, 0, 0, _size-1);
         }
@@ -85,7 +88,7 @@ namespace ds {
                 tree[node] = func(tree[lnode(node)], tree[rnode(node)]);
             }
         }
-        type query(int l, int r) {
+        type query(int l, int r) const {
             assert(l <= r);
             return _query(l, r, 0, 0, _size-1);
         }

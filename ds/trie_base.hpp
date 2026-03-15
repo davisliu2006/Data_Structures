@@ -11,6 +11,12 @@ namespace ds {
         }
     };
 
+    /**
+     * Internal implementation of trie data structures.
+     * Required members for trie_config:
+     * - static const int RANGE: specifies the range of the radix [0, RANGE)
+     * - static uint8_t mapper(uint8_t): compresses valid radix to be in range
+     */
     template <class type, class trie_config = trie_config_default>
     struct trie_base {
         static constexpr int RANGE = trie_config::range;

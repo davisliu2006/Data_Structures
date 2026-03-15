@@ -5,9 +5,9 @@
 #include <new>
 
 namespace ds {
-    /*
-    Contiguous version of deque.
-    */
+    /**
+     * Contiguous version of deque.
+     */
     template <class type>
     struct contig_deque {
         private:

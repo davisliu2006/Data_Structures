@@ -14,6 +14,9 @@ namespace ds {
         }
     };
 
+    /**
+     * Extension of ds::binary_search_tree using AVL tree balancing.
+     */
     template <class type>
     struct avl_tree: binary_search_tree<type, avl_tree_flags> {
         using base_tree = binary_search_tree<type, avl_tree_flags>;
