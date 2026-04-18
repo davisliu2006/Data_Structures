@@ -237,6 +237,7 @@ namespace ds {
             copy_subtree(NULL, root, bst.root);
         };
         binary_search_tree& operator =(const binary_search_tree& bst) {
+            if (this == &bst) {return *this;}
             delete root;
             copy_subtree(NULL, root, bst.root);
             return *this;
@@ -246,6 +247,7 @@ namespace ds {
             bst.root = NULL;
         };
         binary_search_tree& operator =(binary_search_tree&& bst) noexcept {
+            if (this == &bst) {return *this;}
             delete root;
             root = bst.root;
             bst.root = NULL;

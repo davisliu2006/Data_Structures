@@ -76,5 +76,24 @@ namespace ds {
         }
         node* find(const std::string& str) {return find(str.c_str(), str.size());}
         node* insert(const std::string& str) {return insert(str.c_str(), str.size());}
+
+        protected:
+        static void copy_subtree(node* dst_par, node*& dst, node* src) {
+            if (!src) {return;}
+            dst = new node(dst_par, src->radix, src->leaf);
+            dst->val = src->val;
+            for (int i = 0; i < RANGE; i++) {
+                copy_subtree(dst, dst->children[i], src->children[i]);
+            }
+        }
+        trie_base(const trie_base& tr) {
+            copy_subtree(NULL, root, tr.root);
+        }
+        trie_base& operator =(const trie_base& tr) {
+            if (this == &tr) {return *this;}
+            delete root;
+            copy_subtree(NULL, root, tr.root);
+            return *this;
+        }
     };
 }

@@ -10,6 +10,11 @@ namespace ds {
     template <class type>
     struct trie_map: trie_base<type> {
         trie_map<type>(): trie_base<type>() {}
+        trie_map<type>(const trie_map<type>& tr): trie_base<type>(tr) {}
+        trie_map<type>& operator =(const trie_map<type>& tr) {
+            trie_base<type>::operator =(tr);
+            return *this;
+        }
     };
 
     /**
@@ -19,5 +24,10 @@ namespace ds {
     template <class type, class trie_config>
     struct sp_trie_map: trie_base<type, trie_config> {
         sp_trie_map(): trie_base<type, trie_config>() {}
+        sp_trie_map(const sp_trie_map<type, trie_config>& tr): trie_base<type, trie_config>(tr) {}
+        sp_trie_map<type, trie_config>& operator =(const sp_trie_map<type, trie_config>& tr) {
+            trie_base<type, trie_config>::operator =(tr);
+            return *this;
+        }
     };
 }

@@ -84,6 +84,7 @@ namespace ds {
             copy_subtree(NULL, base_tree::root, bst.root);
         };
         avl_tree& operator =(const avl_tree& bst) {
+            if (this == &bst) {return *this;}
             delete base_tree::root;
             copy_subtree(NULL, base_tree::root, bst.root);
             return *this;
@@ -93,6 +94,7 @@ namespace ds {
             bst.root = NULL;
         };
         avl_tree& operator =(avl_tree&& bst) noexcept {
+            if (this == &bst) {return *this;}
             delete base_tree::root;
             base_tree::root = bst.root;
             bst.root = NULL;
